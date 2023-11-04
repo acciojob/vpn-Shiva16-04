@@ -48,8 +48,9 @@ public class UserServiceImpl implements UserService {
                 //setting the foreign key of country
                 country.setUser(user);
 
-
                 user.setOriginalIp(""+country.getCode()+"."+userRepository3.save(user).getId());
+
+                userRepository3.save(user);
                 return user;
             }
         }
