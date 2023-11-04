@@ -39,17 +39,16 @@ public class ConnectionServiceImpl implements ConnectionService {
         //handling case 3
         ServiceProvider serviceProvider=null;
         Country country=null;
-        int min=Integer.MAX_VALUE;
 
         for(ServiceProvider serviceProviderValue: user.getServiceProviderList()){
             for(Country countryValue: serviceProviderValue.getCountryList()){
-                if(countryValue.getCountryName().toString().equals(inputCountryName) && serviceProviderValue.getId()<min){
+                if(countryValue.getCountryName().toString().equals(inputCountryName)){
                     serviceProvider=serviceProviderValue;
                     country=countryValue;
-                    min=serviceProviderValue.getId();
+                    break;
                 }
             }
-//            if(serviceProvider!=null)break;
+            if(serviceProvider!=null)break;
         }
         if(serviceProvider==null){
             throw new Exception("Unable to connect");
@@ -93,6 +92,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         String senderCountry=sender.getOriginalCountry().getCountryName().toString();
         String receiverCountry=null;
         if(receiver.getConnected()){
+            if(senderCountry.equals(receiver.getOriginalCountry().getCountryName().toString())){
+                return sender;
+            }
             String code=receiver.getMaskedIp().substring(0,3);
             switch (code){
                 case "001": receiverCountry="IND"; break;
@@ -104,9 +106,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         }else{
             receiverCountry=receiver.getOriginalCountry().getCountryName().toString();
         }
-        if(senderCountry.equals(receiverCountry)){
-            return sender;
-        }
+
         User user=connect(senderId, receiverCountry);
         if(!user.getConnected()){
             throw new Exception("Cannot establish communication");
