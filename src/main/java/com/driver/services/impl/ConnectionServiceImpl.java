@@ -26,7 +26,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         //handling case 1
         if(user.getConnected()){
-            throw new Exception("Already Connected");
+            throw new Exception("Already connected");
         }
 
         //handling case 2
@@ -67,7 +67,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         userRepository2.save(user);
         serviceProviderRepository2.save(serviceProvider);
-//        connectionRepository2.save(connection);
+        //connectionRepository2.save(connection);
 
         return user;
 
@@ -86,10 +86,9 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
-        Optional<User>optionalSender=userRepository2.findById(senderId);
-        Optional<User>optionalReceiver=userRepository2.findById(receiverId);
-        User sender=optionalSender.get();
-        User receiver=optionalReceiver.get();
+        User sender=userRepository2.findById(senderId).get();
+        User receiver=userRepository2.findById(receiverId).get();
+
         String senderCountry=sender.getOriginalCountry().toString();
         String receiverCountry=null;
         if(receiver.getConnected()){
@@ -111,7 +110,10 @@ public class ConnectionServiceImpl implements ConnectionService {
                     receiverCountry= "CHI";
                     break;
                 }
-                case "005": receiverCountry= "JPN";
+                case "005": {
+                    receiverCountry= "JPN";
+                    break;
+                }
 
             }
         }else{
