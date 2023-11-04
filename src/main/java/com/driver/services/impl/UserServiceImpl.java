@@ -28,33 +28,34 @@ public class UserServiceImpl implements UserService {
     public User register(String username, String password, String countryName) throws Exception{
         //checking country name is subset of country enum or not
         String givenCountryName=countryName.toUpperCase();
-        Country country=null;
+        Country country=new Country();;
         for(CountryName countryNameValue: CountryName.values()){
             if(countryNameValue.toString().equals(givenCountryName)){
-                country=new Country();
+
                 country.setCountryName(countryNameValue);
                 country.setCode(countryNameValue.toCode());
+
+                User user=new User();
+                user.setUsername(username);
+                user.setPassword(password);
+                user.setConnected(false);
+                user.setMaskedIp(null);
+
+                //initializing the foreign keys
+                user.setConnectionList(new ArrayList<>());
+                user.setServiceProviderList(new ArrayList<>());
+
+                //setting the foreign key of country
+                country.setUser(user);
+
+
+                user.setOriginalIp(""+country.getCode()+"."+userRepository3.save(user).getId());
+                return user;
             }
         }
-        if(country==null){
-            throw new Exception("Country not found");
-        }
-        User user=new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setConnected(false);
-        user.setMaskedIp(null);
 
-        //initializing the foreign keys
-        user.setConnectionList(new ArrayList<>());
-        user.setServiceProviderList(new ArrayList<>());
+        throw new Exception("Country not found");
 
-        //setting the foreign key of country
-        country.setUser(user);
-
-
-        user.setOriginalIp(""+country.getCode()+"."+userRepository3.save(user).getId());
-        return user;
     }
 
     @Override
