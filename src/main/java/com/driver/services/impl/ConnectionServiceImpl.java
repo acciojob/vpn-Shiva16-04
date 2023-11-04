@@ -8,7 +8,6 @@ import com.driver.services.ConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,13 +26,13 @@ public class ConnectionServiceImpl implements ConnectionService {
             User user=optionalUser.get();
 
             //handling case 1
-            if(user.isConnected()==true){
+            if(user.getConnected()==true){
                 throw new Exception("Already Connected");
             }
 
             //handling case 2
             String inputCountryName=countryName.toUpperCase();
-            String userCountryName=user.getCountry().getCountryName().toString();
+            String userCountryName=user.getOriginalCountry().getCountryName().toString();
             if(inputCountryName.equals(userCountryName)){
                 return user;
             }
@@ -75,7 +74,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         Optional<User>optionalUser=userRepository2.findById(userId);
         if(optionalUser.isPresent()){
             User user=optionalUser.get();
-            if(user.isConnected()==false){
+            if(user.getConnected()==false){
                 throw new Exception("Already disconnected");
             }
             user.setConnected(false);
