@@ -52,9 +52,9 @@ public class UserServiceImpl implements UserService {
         //setting the foreign key of country
         country.setUser(user);
 
-        User savedUser=userRepository3.save(user);
-        savedUser.setOriginalIp(""+country.getCode()+"."+savedUser.getId());
-        return savedUser;
+
+        user.setOriginalIp(""+country.getCode()+"."+userRepository3.save(user).getId());
+        return user;
     }
 
     @Override
@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
             user.getServiceProviderList().add(serviceProvider);
             serviceProvider.getUsers().add(user);
 
-            User savedUser=userRepository3.save(user);
-            return savedUser;
+            userRepository3.save(user);
+            return user;
         }
         return null;
     }

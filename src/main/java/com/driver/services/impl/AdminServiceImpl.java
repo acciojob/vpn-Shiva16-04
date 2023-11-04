@@ -31,8 +31,8 @@ public class AdminServiceImpl implements AdminService {
         admin.setUsername(username);
         admin.setPassword(password);
         admin.setServiceProviders(new ArrayList<>());
-        Admin savedAdmin=adminRepository1.save(admin);
-        return savedAdmin;
+        adminRepository1.save(admin);
+        return admin;
     }
 
     @Override
@@ -79,8 +79,8 @@ public class AdminServiceImpl implements AdminService {
             country.setServiceProvider(serviceProvider);
             //bidirectionally mapping the country
             serviceProvider.getCountryList().add(country);
-            ServiceProvider savedServiceProvider=serviceProviderRepository1.save(serviceProvider);
-            return savedServiceProvider;
+            serviceProviderRepository1.save(serviceProvider);
+            return serviceProvider;
         }
         return null;
     }

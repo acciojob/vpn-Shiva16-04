@@ -79,8 +79,8 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
             user.setConnected(false); //error rectified from de-referencing
             user.setMaskedIp(null);
-            User savedUser=userRepository2.save(user);
-            return savedUser;
+            userRepository2.save(user);
+            return user;
         }
         return null;
     }
