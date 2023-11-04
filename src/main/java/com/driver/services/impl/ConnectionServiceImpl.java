@@ -87,6 +87,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
+        return null;
 
     }
 }
