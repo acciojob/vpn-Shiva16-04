@@ -117,7 +117,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
             }
         }else{
-            receiverCountry=receiver.getOriginalCountry().toString();
+            receiverCountry=receiver.getOriginalCountry().getCountryName().toString();
         }
         if(senderCountry.equals(receiverCountry)){
             return sender;
