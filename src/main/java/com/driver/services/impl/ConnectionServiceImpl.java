@@ -89,7 +89,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         User sender=userRepository2.findById(senderId).get();
         User receiver=userRepository2.findById(receiverId).get();
 
-        String senderCountry=sender.getOriginalCountry().toString();
+        String senderCountry=sender.getOriginalCountry().getCountryName().toString();
         String receiverCountry=null;
         if(receiver.getConnected()){
             String code=receiver.getMaskedIp().substring(0,3);
