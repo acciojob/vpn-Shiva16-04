@@ -39,13 +39,14 @@ public class ConnectionServiceImpl implements ConnectionService {
         //handling case 3
         ServiceProvider serviceProvider=null;
         Country country=null;
+        int min=Integer.MAX_VALUE;
 
         for(ServiceProvider serviceProviderValue: user.getServiceProviderList()){
             for(Country countryValue: serviceProviderValue.getCountryList()){
-                if(countryValue.getCountryName().toString().equals(inputCountryName)){
+                if(countryValue.getCountryName().toString().equals(inputCountryName) && serviceProviderValue.getId()<min){
                     serviceProvider=serviceProviderValue;
                     country=countryValue;
-                    break;
+                    min=serviceProviderValue.getId();
                 }
             }
             if(serviceProvider!=null)break;
@@ -94,27 +95,11 @@ public class ConnectionServiceImpl implements ConnectionService {
         if(receiver.getConnected()){
             String code=receiver.getMaskedIp().substring(0,3);
             switch (code){
-                case "001": {
-                    receiverCountry= "IND";
-                    break;
-                }
-                case "002": {
-                    receiverCountry= "USA";
-                    break;
-                }
-                case "003": {
-                    receiverCountry= "AUS";
-                    break;
-                }
-                case "004": {
-                    receiverCountry= "CHI";
-                    break;
-                }
-                case "005": {
-                    receiverCountry= "JPN";
-                    break;
-                }
-
+                case "001": receiverCountry="IND"; break;
+                case "002": receiverCountry="USA"; break;
+                case "003": receiverCountry="AUS"; break;
+                case "004": receiverCountry="CHI"; break;
+                case "005": receiverCountry="JPN"; break;
             }
         }else{
             receiverCountry=receiver.getOriginalCountry().getCountryName().toString();
