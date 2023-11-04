@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
@@ -21,11 +22,68 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public User connect(int userId, String countryName) throws Exception{
+        Optional<User>optionalUser=userRepository2.findById(userId);
+        if(optionalUser.isPresent()){
+            User user=optionalUser.get();
 
+            //handling case 1
+            if(user.isConnected()==true){
+                throw new Exception("Already Connected");
+            }
+
+            //handling case 2
+            String inputCountryName=countryName.toUpperCase();
+            String userCountryName=user.getCountry().getCountryName().toString();
+            if(inputCountryName.equals(userCountryName)){
+                return user;
+            }
+
+            //handling case 3
+            ServiceProvider serviceProvider=null;
+            for(ServiceProvider serviceProviderValue: user.getServiceProviderList()){
+                for(Country country: serviceProviderValue.getCountryList()){
+                    if(country.toString().equals(inputCountryName)){
+                        serviceProvider=serviceProviderValue;
+                        break;
+                    }
+                }
+                if(serviceProvider!=null)break;
+            }
+            if(serviceProvider==null){
+                throw new Exception("Unable to connect");
+            }
+
+            Connection connection=new Connection();
+            //setting foreign keys
+            connection.setUser(user);
+            connection.setServiceProvider(serviceProvider);
+
+            //bidirectionally mapping
+            serviceProvider.getConnectionList().add(connection);
+            user.getConnectionList().add(connection);
+            user.setConnected(true);
+            user.setMaskedIp(""+CountryName.valueOf(inputCountryName).toCode()+"."+serviceProvider.getId()+"."+userId);
+
+            connectionRepository2.save(connection);
+
+            return user;
+        }
+        return null;
     }
     @Override
     public User disconnect(int userId) throws Exception {
-
+        Optional<User>optionalUser=userRepository2.findById(userId);
+        if(optionalUser.isPresent()){
+            User user=optionalUser.get();
+            if(user.isConnected()==false){
+                throw new Exception("Already disconnected");
+            }
+            user.setConnected(false);
+            user.setMaskedIp(null);
+            User savedUser=userRepository2.save(user);
+            return savedUser;
+        }
+        return null;
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
