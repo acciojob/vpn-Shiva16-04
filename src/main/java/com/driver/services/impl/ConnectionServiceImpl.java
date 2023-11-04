@@ -60,7 +60,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             //bidirectionally mapping
             serviceProvider.getConnectionList().add(connection);
             user.getConnectionList().add(connection);
-            user.setConnected(true);
+            user.setConnected(Boolean.TRUE); //error rectified from de-referencing
             user.setMaskedIp(""+CountryName.valueOf(inputCountryName).toCode()+"."+serviceProvider.getId()+"."+userId);
 
             connectionRepository2.save(connection);
@@ -77,7 +77,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             if(user.getConnected()==false){
                 throw new Exception("Already disconnected");
             }
-            user.setConnected(false);
+            user.setConnected(Boolean.FALSE); //error rectified from de-referencing
             user.setMaskedIp(null);
             User savedUser=userRepository2.save(user);
             return savedUser;
