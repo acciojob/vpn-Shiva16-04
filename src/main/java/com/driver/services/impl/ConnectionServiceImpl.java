@@ -49,7 +49,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                     min=serviceProviderValue.getId();
                 }
             }
-            if(serviceProvider!=null)break;
+//            if(serviceProvider!=null)break;
         }
         if(serviceProvider==null){
             throw new Exception("Unable to connect");
