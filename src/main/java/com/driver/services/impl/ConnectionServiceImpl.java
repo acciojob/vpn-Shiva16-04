@@ -30,7 +30,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
 
         //handling case 2
-        String inputCountryName=countryName;
+        String inputCountryName=countryName.toUpperCase();
         String userCountryName=user.getOriginalCountry().getCountryName().toString();
         if(inputCountryName.equals(userCountryName)){
             return user;
@@ -38,10 +38,13 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         //handling case 3
         ServiceProvider serviceProvider=null;
+        Country country=null;
+
         for(ServiceProvider serviceProviderValue: user.getServiceProviderList()){
-            for(Country country: serviceProviderValue.getCountryList()){
-                if(country.toString().equals(inputCountryName)){
+            for(Country countryValue: serviceProviderValue.getCountryList()){
+                if(countryValue.getCountryName().toString().equals(inputCountryName)){
                     serviceProvider=serviceProviderValue;
+                    country=countryValue;
                     break;
                 }
             }
@@ -60,7 +63,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         serviceProvider.getConnectionList().add(connection);
         user.getConnectionList().add(connection);
         user.setConnected(true); //error rectified from de-referencing
-        user.setMaskedIp(""+CountryName.valueOf(inputCountryName).toCode()+"."+serviceProvider.getId()+"."+userId);
+        user.setMaskedIp(""+country.getCountryName().toCode()+"."+serviceProvider.getId()+"."+userId);
 
         connectionRepository2.save(connection);
 
