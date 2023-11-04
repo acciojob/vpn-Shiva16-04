@@ -62,16 +62,14 @@ public class UserServiceImpl implements UserService {
         Optional<User>optionalUser=userRepository3.findById(userId);
         Optional<ServiceProvider>optionalServiceProvider=serviceProviderRepository3.findById(serviceProviderId);
 
-        if(optionalUser.isPresent() && optionalServiceProvider.isPresent()){
-            User user=optionalUser.get();
-            ServiceProvider serviceProvider=optionalServiceProvider.get();
+        User user=optionalUser.get();
+        ServiceProvider serviceProvider=optionalServiceProvider.get();
 
-            user.getServiceProviderList().add(serviceProvider);
-            serviceProvider.getUsers().add(user);
+        user.getServiceProviderList().add(serviceProvider);
+        serviceProvider.getUsers().add(user);
 
-            userRepository3.save(user);
-            return user;
-        }
-        return null;
+        userRepository3.save(user);
+        return user;
+
     }
 }

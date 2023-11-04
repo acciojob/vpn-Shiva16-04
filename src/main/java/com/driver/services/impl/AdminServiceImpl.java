@@ -38,23 +38,20 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin addServiceProvider(int adminId, String providerName) {
         Optional<Admin>optionalAdmin = adminRepository1.findById(adminId);
-        if(optionalAdmin.isPresent()){
-            Admin admin=optionalAdmin.get();
-            ServiceProvider serviceProvider=new ServiceProvider();
-            serviceProvider.setName(providerName);
-            //initializing the arraylists
-            serviceProvider.setUsers(new ArrayList<>());
-            serviceProvider.setConnectionList(new ArrayList<>());
-            serviceProvider.setCountryList(new ArrayList<>());
-            //setting the foreign key
-            serviceProvider.setAdmin(admin);
-            //mapping bidirectionally
-            admin.getServiceProviders().add(serviceProvider);
-            ServiceProvider savedServiceProvider=serviceProviderRepository1.save(serviceProvider);
-            //mapping bidirectionally
-            return admin;
-        }
-        return null;
+        Admin admin=optionalAdmin.get();
+        ServiceProvider serviceProvider=new ServiceProvider();
+        serviceProvider.setName(providerName);
+        //initializing the arraylists
+        serviceProvider.setUsers(new ArrayList<>());
+        serviceProvider.setConnectionList(new ArrayList<>());
+        serviceProvider.setCountryList(new ArrayList<>());
+        //setting the foreign key
+        serviceProvider.setAdmin(admin);
+        //mapping bidirectionally
+        admin.getServiceProviders().add(serviceProvider);
+        adminRepository1.save(admin);
+        //mapping bidirectionally
+        return admin;
     }
 
     @Override
