@@ -60,7 +60,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             //bidirectionally mapping
             serviceProvider.getConnectionList().add(connection);
             user.getConnectionList().add(connection);
-            user.setConnected(Boolean.TRUE); //error rectified from de-referencing
+            user.setConnected(true); //error rectified from de-referencing
             user.setMaskedIp(""+CountryName.valueOf(inputCountryName).toCode()+"."+serviceProvider.getId()+"."+userId);
 
             connectionRepository2.save(connection);
