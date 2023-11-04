@@ -22,111 +22,103 @@ public class ConnectionServiceImpl implements ConnectionService {
     @Override
     public User connect(int userId, String countryName) throws Exception{
         Optional<User>optionalUser=userRepository2.findById(userId);
-        if(optionalUser.isPresent()){
-            User user=optionalUser.get();
+        User user=optionalUser.get();
 
-            //handling case 1
-            if(user.getConnected()){
-                throw new Exception("Already Connected");
-            }
+        //handling case 1
+        if(user.getConnected()){
+            throw new Exception("Already Connected");
+        }
 
-            //handling case 2
-            String inputCountryName=countryName.toUpperCase();
-            String userCountryName=user.getOriginalCountry().getCountryName().toString();
-            if(inputCountryName.equals(userCountryName)){
-                return user;
-            }
-
-            //handling case 3
-            ServiceProvider serviceProvider=null;
-            for(ServiceProvider serviceProviderValue: user.getServiceProviderList()){
-                for(Country country: serviceProviderValue.getCountryList()){
-                    if(country.toString().equals(inputCountryName)){
-                        serviceProvider=serviceProviderValue;
-                        break;
-                    }
-                }
-                if(serviceProvider!=null)break;
-            }
-            if(serviceProvider==null){
-                throw new Exception("Unable to connect");
-            }
-
-            Connection connection=new Connection();
-            //setting foreign keys
-            connection.setUser(user);
-            connection.setServiceProvider(serviceProvider);
-
-            //bidirectionally mapping
-            serviceProvider.getConnectionList().add(connection);
-            user.getConnectionList().add(connection);
-            user.setConnected(true); //error rectified from de-referencing
-            user.setMaskedIp(""+CountryName.valueOf(inputCountryName).toCode()+"."+serviceProvider.getId()+"."+userId);
-
-            connectionRepository2.save(connection);
-
+        //handling case 2
+        String inputCountryName=countryName;
+        String userCountryName=user.getOriginalCountry().getCountryName().toString();
+        if(inputCountryName.equals(userCountryName)){
             return user;
         }
-        return null;
+
+        //handling case 3
+        ServiceProvider serviceProvider=null;
+        for(ServiceProvider serviceProviderValue: user.getServiceProviderList()){
+            for(Country country: serviceProviderValue.getCountryList()){
+                if(country.toString().equals(inputCountryName)){
+                    serviceProvider=serviceProviderValue;
+                    break;
+                }
+            }
+            if(serviceProvider!=null)break;
+        }
+        if(serviceProvider==null){
+            throw new Exception("Unable to connect");
+        }
+
+        Connection connection=new Connection();
+        //setting foreign keys
+        connection.setUser(user);
+        connection.setServiceProvider(serviceProvider);
+
+        //bidirectionally mapping
+        serviceProvider.getConnectionList().add(connection);
+        user.getConnectionList().add(connection);
+        user.setConnected(true); //error rectified from de-referencing
+        user.setMaskedIp(""+CountryName.valueOf(inputCountryName).toCode()+"."+serviceProvider.getId()+"."+userId);
+
+        connectionRepository2.save(connection);
+
+        return user;
+
     }
     @Override
     public User disconnect(int userId) throws Exception {
         Optional<User>optionalUser=userRepository2.findById(userId);
-        if(optionalUser.isPresent()){
-            User user=optionalUser.get();
-            if(!user.getConnected()){
-                throw new Exception("Already disconnected");
-            }
-            user.setConnected(false); //error rectified from de-referencing
-            user.setMaskedIp(null);
-            userRepository2.save(user);
-            return user;
+        User user=optionalUser.get();
+        if(!user.getConnected()){
+            throw new Exception("Already disconnected");
         }
-        return null;
+        user.setConnected(false); //error rectified from de-referencing
+        user.setMaskedIp(null);
+        userRepository2.save(user);
+        return user;
     }
     @Override
     public User communicate(int senderId, int receiverId) throws Exception {
         Optional<User>optionalSender=userRepository2.findById(senderId);
         Optional<User>optionalReceiver=userRepository2.findById(receiverId);
-        if(optionalSender.isPresent() && optionalReceiver.isPresent()){
-            User sender=optionalSender.get();
-            User receiver=optionalReceiver.get();
-            String senderCountry=sender.getOriginalCountry().toString();
-            String receiverCountry=null;
-            if(receiver.getConnected()){
-                String code=receiver.getMaskedIp().substring(0,3);
-                switch (code){
-                    case "001": {
-                        receiverCountry= "IND";
-                        break;
-                    }
-                    case "002": {
-                        receiverCountry= "USA";
-                        break;
-                    }
-                    case "003": {
-                        receiverCountry= "AUS";
-                        break;
-                    }
-                    case "004": {
-                        receiverCountry= "CHI";
-                        break;
-                    }
-                    case "005": receiverCountry= "JPN";
-
+        User sender=optionalSender.get();
+        User receiver=optionalReceiver.get();
+        String senderCountry=sender.getOriginalCountry().toString();
+        String receiverCountry=null;
+        if(receiver.getConnected()){
+            String code=receiver.getMaskedIp().substring(0,3);
+            switch (code){
+                case "001": {
+                    receiverCountry= "IND";
+                    break;
                 }
-            }else{
-                receiverCountry=receiver.getOriginalCountry().toString();
+                case "002": {
+                    receiverCountry= "USA";
+                    break;
+                }
+                case "003": {
+                    receiverCountry= "AUS";
+                    break;
+                }
+                case "004": {
+                    receiverCountry= "CHI";
+                    break;
+                }
+                case "005": receiverCountry= "JPN";
+
             }
-            if(senderCountry.equals(receiverCountry)){
-                return sender;
-            }
-            User user=connect(senderId, receiverCountry);
-            if(!user.getConnected()){
-                throw new Exception("Cannot establish communication");
-            }
-            return user;
+        }else{
+            receiverCountry=receiver.getOriginalCountry().toString();
         }
-        return null;
+        if(senderCountry.equals(receiverCountry)){
+            return sender;
+        }
+        User user=connect(senderId, receiverCountry);
+        if(!user.getConnected()){
+            throw new Exception("Cannot establish communication");
+        }
+        return user;
     }
 }
