@@ -26,7 +26,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             User user=optionalUser.get();
 
             //handling case 1
-            if(user.getConnected()==true){
+            if(user.getConnected()){
                 throw new Exception("Already Connected");
             }
 
@@ -74,7 +74,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         Optional<User>optionalUser=userRepository2.findById(userId);
         if(optionalUser.isPresent()){
             User user=optionalUser.get();
-            if(user.getConnected()==false){
+            if(!user.getConnected()){
                 throw new Exception("Already disconnected");
             }
             user.setConnected(Boolean.FALSE); //error rectified from de-referencing
