@@ -65,7 +65,9 @@ public class ConnectionServiceImpl implements ConnectionService {
         user.setConnected(true); //error rectified from de-referencing
         user.setMaskedIp(""+country.getCountryName().toCode()+"."+serviceProvider.getId()+"."+userId);
 
-        connectionRepository2.save(connection);
+        userRepository2.save(user);
+        serviceProviderRepository2.save(serviceProvider);
+//        connectionRepository2.save(connection);
 
         return user;
 
