@@ -13,7 +13,7 @@ public class User {
     private String password;
     private String originalIp;
     private String maskedIp;
-    private boolean connected;
+    private Boolean connected;
     @ManyToMany
     private List<ServiceProvider> serviceProviderList;
     @OneToMany (mappedBy = "user", cascade = CascadeType.ALL)
@@ -80,7 +80,7 @@ public class User {
         return connected;
     }
 
-    public void setConnected(boolean connected) {
+    public void setConnected(Boolean connected) {
         this.connected = connected;
     }
 
