@@ -80,7 +80,7 @@ public class User {
         return connected;
     }
 
-    public void setConnected(Boolean connected) {
+    public void setConnected(boolean connected) {
         this.connected = connected;
     }
 

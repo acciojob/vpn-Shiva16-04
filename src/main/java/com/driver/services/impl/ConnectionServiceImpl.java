@@ -77,7 +77,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             if(!user.getConnected()){
                 throw new Exception("Already disconnected");
             }
-            user.setConnected(Boolean.FALSE); //error rectified from de-referencing
+            user.setConnected(false); //error rectified from de-referencing
             user.setMaskedIp(null);
             User savedUser=userRepository2.save(user);
             return savedUser;
@@ -96,10 +96,22 @@ public class ConnectionServiceImpl implements ConnectionService {
             if(receiver.getConnected()){
                 String code=receiver.getMaskedIp().substring(0,3);
                 switch (code){
-                    case "001": receiverCountry= "IND";
-                    case "002": receiverCountry= "USA";
-                    case "003": receiverCountry= "AUS";
-                    case "004": receiverCountry= "CHI";
+                    case "001": {
+                        receiverCountry= "IND";
+                        break;
+                    }
+                    case "002": {
+                        receiverCountry= "USA";
+                        break;
+                    }
+                    case "003": {
+                        receiverCountry= "AUS";
+                        break;
+                    }
+                    case "004": {
+                        receiverCountry= "CHI";
+                        break;
+                    }
                     case "005": receiverCountry= "JPN";
 
                 }
