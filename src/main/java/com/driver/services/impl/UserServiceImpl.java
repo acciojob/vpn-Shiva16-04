@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
                 user.setUsername(username);
                 user.setPassword(password);
                 user.setConnected(false);
-                user.setMaskedIp(null);
+                user.setMaskedIp("");
 
                 //initializing the foreign keys
                 user.setConnectionList(new ArrayList<>());
