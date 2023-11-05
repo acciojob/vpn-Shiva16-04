@@ -109,7 +109,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
         User user=connect(senderId, receiverCountry);
         if(!user.getConnected()){
-            throw new Exception("Cannot establish communication");
+            throw new Exception("Unable to connect");
         }
         return user;
     }
