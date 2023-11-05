@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
                 user.setUsername(username);
                 user.setPassword(password);
                 user.setConnected(false);
-                user.setMaskedIp("");
 
                 //initializing the foreign keys
                 user.setConnectionList(new ArrayList<>());
@@ -47,9 +46,10 @@ public class UserServiceImpl implements UserService {
 
                 //setting the foreign key of country
                 country.setUser(user);
+                user.setOriginalCountry(country);
                 user=userRepository3.save(user);
 
-                user.setOriginalIp(""+country.getCountryName().toCode()+"."+user.getId());
+                user.setOriginalIp(""+country.getCode()+"."+user.getId());
 
                 userRepository3.save(user);
                 return user;
